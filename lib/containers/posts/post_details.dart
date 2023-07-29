@@ -40,19 +40,6 @@ class PostDetails extends StatelessWidget {
                   // Image.network(
                   //     "https://th.bing.com/th/id/OIP.sldsThi-4O7viMDMp527cgHaE8?pid=ImgDet&rs=1"),
                   const Padding(padding: EdgeInsets.only(left: 25, top: 25)),
-                  TextButton(
-                      onPressed: () {
-                        context.read<CounterCubit>().increment();
-                      },
-                      child: Text('incremet')),
-                  TextButton(
-                      onPressed: () {
-                        context.read<CounterCubit>().decrement();
-                      },
-                      child: Text('decrement')),
-                  BlocBuilder<CounterCubit, int>(
-                      builder: (context, state) =>
-                          Text('the current cubit value: $state')),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,

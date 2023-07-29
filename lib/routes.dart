@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertestapp/blocs/counter_cubit.dart';
+import 'package:fluttertestapp/containers/guardians/guardians_page.dart';
 import 'package:fluttertestapp/containers/common/notfound_page.dart';
 import 'package:fluttertestapp/containers/common/page_wrapper.dart';
 import 'package:fluttertestapp/containers/photos/edit_photo_details.dart';
@@ -16,6 +17,11 @@ class Routes {
 
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case GuardiansPage.routeName:
+        return MaterialPageRoute(
+            builder: (_) => PageWrapper(
+                cubit: _counterBloc,
+                child: const GuardiansPage(title: 'News')));
       case PostsPage.routeName:
         return MaterialPageRoute(
             builder: (_) => PageWrapper(

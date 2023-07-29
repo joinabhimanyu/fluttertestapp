@@ -76,9 +76,6 @@ class PhotoDetails extends StatelessWidget {
                   width: 200,
                   height: 200,
                 ),
-                BlocBuilder<CounterCubit, int>(
-                    builder: (context, state) =>
-                        Text('the current cubit value: $state')),
                 const Padding(padding: EdgeInsets.only(bottom: 30)),
                 Text(
                   'AlbumId: ${data.albumId}',

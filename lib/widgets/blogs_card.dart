@@ -31,28 +31,23 @@ class BlogsCard extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: 200,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 270,
-              child: Text(
-                json[bodyFieldName].toString().length >= 60
-                    ? json[bodyFieldName].toString().substring(0, 60)
-                    : json[bodyFieldName].toString(),
-                softWrap: true,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w400, fontSize: 22, wordSpacing: 4),
-              ),
-            ),
-            ShareIcons(
-                wantshareIcon: true,
-                sharePadding: const EdgeInsets.only(top: 90, left: 0),
-                morePadding: const EdgeInsets.only(top: 90, left: 0),
-                parentContext: context,
-                title: json[bodyFieldName])
-          ],
+        Padding(padding: EdgeInsets.only(top: 5)),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Text(
+            json[bodyFieldName].toString().length >= 60
+                ? json[bodyFieldName].toString().substring(0, 60)
+                : json[bodyFieldName].toString(),
+            softWrap: true,
+            style: const TextStyle(
+                fontWeight: FontWeight.w400, fontSize: 22, wordSpacing: 4),
+          ),
         ),
+        ShareIcons(
+            wantLikeIcon: true,
+            wantshareIcon: true,
+            parentContext: context,
+            title: json[bodyFieldName]),
         wantCommentsField != null && wantCommentsField == true
             ? CustomSearchField(
                 hinText: 'Add Comments',

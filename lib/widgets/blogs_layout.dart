@@ -47,7 +47,12 @@ class BlogsLayout<T> extends StatelessWidget {
             : const SizedBox.shrink(),
         const Padding(padding: EdgeInsets.only(top: 0)),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.79,
+          height: wantCustomSearch != null &&
+                  wantCustomSearch == true &&
+                  wantCommentsField != null &&
+                  wantCommentsField == true
+              ? MediaQuery.of(context).size.height * 0.79
+              : MediaQuery.of(context).size.height * 0.85,
           child: CustomListview<T>(
             future: future,
             onRefresh: onRefresh,

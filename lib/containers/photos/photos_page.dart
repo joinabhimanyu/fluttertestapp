@@ -126,25 +126,24 @@ class _PhotosPageState extends State<PhotosPage> {
 
   Widget _renderTitle(dynamic record) {
     return Container(
-        padding: const EdgeInsets.only(right: 2),
-        child: Column(children: [
-          SizedBox(
-            width: 280,
-            child: Text(
-              record.title,
-            ),
+        //padding: const EdgeInsets.only(right: 2),
+        child: SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Column(children: [
+        SizedBox(
+          width: 250,
+          child: Text(
+            record.title.toString(),
           ),
-          Row(
-            children: [
-              ShareIcons(
-                  wantshareIcon: false,
-                  sharePadding: const EdgeInsets.only(top: 0, left: 170),
-                  morePadding: const EdgeInsets.only(top: 0, left: 180),
-                  parentContext: context,
-                  title: (record as PhotosModel).title)
-            ],
-          ),
-        ]));
+        ),
+        Padding(padding: EdgeInsets.only(top: 10)),
+        ShareIcons(
+            wantLikeIcon: false,
+            wantshareIcon: false,
+            parentContext: context,
+            title: (record as PhotosModel).title)
+      ]),
+    ));
   }
 
   Widget? _renderContent() {
@@ -212,7 +211,7 @@ class _PhotosPageState extends State<PhotosPage> {
         ],
       ),
       body:
-          Container(padding: const EdgeInsets.all(8), child: _renderContent()),
+          Container(padding: const EdgeInsets.all(5), child: _renderContent()),
     );
   }
 }
