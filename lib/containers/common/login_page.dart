@@ -40,9 +40,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // https://cdn.dribbble.com/users/18123/screenshots/16724837/media/d7362f61dce3240e9dcaffa4ac02191b.png?compress=1&resize=400x300&vertical=center
-                Image.network(
-                    "https://upload.wikimedia.org/wikipedia/commons/8/85/Logo-Test.png"),
+                Image.asset("images/LogoTest.png"),
+                // Image.network(
+                //     "https://upload.wikimedia.org/wikipedia/commons/8/85/Logo-Test.png"),
                 const Padding(padding: EdgeInsets.only(top: 10)),
                 CustomSearchField(
                   key: usernamefield,

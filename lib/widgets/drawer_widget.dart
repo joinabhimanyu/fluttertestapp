@@ -23,8 +23,10 @@ class DrawerWidget extends StatelessWidget {
                     color: Colors.white,
                     shape: BoxShape.rectangle,
                     image: DecorationImage(
-                        image: NetworkImage(
-                            "https://upload.wikimedia.org/wikipedia/commons/8/85/Logo-Test.png"))),
+                        image: AssetImage("images/LogoTest.png")
+                        // NetworkImage(
+                        //     "https://upload.wikimedia.org/wikipedia/commons/8/85/Logo-Test.png")
+                        )),
                 child: Container(
                   alignment: Alignment.bottomCenter,
                   child: const Text(''),

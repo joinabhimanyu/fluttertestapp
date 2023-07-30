@@ -40,7 +40,7 @@ class ShareIcons extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20))),
-                tileColor: Color.fromARGB(255, 56, 210, 71),
+                tileColor: Color.fromARGB(255, 56, 140, 224),
                 leading: const CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 222, 225, 228),
                 ),

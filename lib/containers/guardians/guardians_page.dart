@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertestapp/models/guardian_result.dart';
 import 'package:fluttertestapp/services/guardian_service.dart';
+import 'package:fluttertestapp/services/hotels_service.dart';
 import 'package:fluttertestapp/widgets/custom_search_field.dart';
 import 'package:fluttertestapp/widgets/drawer_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -146,6 +147,8 @@ class _GuardiansPageState extends State<GuardiansPage>
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
+                            //fontFamily: "Schyler",
+                            fontStyle: FontStyle.normal,
                             color: Color.fromARGB(255, 12, 44, 77)),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
@@ -183,10 +186,11 @@ class _GuardiansPageState extends State<GuardiansPage>
   }
 
   Future<void> _launchUrl(String url, {bool isNewTab = true}) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
+    try {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
-      throw Exception('Failed to launch url');
+    } catch (e) {
+      print('failed to open external resource');
+      throw e;
     }
   }
 
