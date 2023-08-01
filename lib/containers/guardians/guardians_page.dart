@@ -78,6 +78,7 @@ class _GuardiansPageState extends State<GuardiansPage>
       //_future = searchGuardianPlatform(page, 20, "");
     });
     fetchGuardingData();
+    fetchHotels();
     super.initState();
   }
 

@@ -4,6 +4,7 @@ import 'package:fluttertestapp/blocs/counter_cubit.dart';
 import 'package:fluttertestapp/containers/guardians/guardians_page.dart';
 import 'package:fluttertestapp/containers/photos/photos_page.dart';
 import 'package:fluttertestapp/containers/posts/posts_page.dart';
+import 'package:fluttertestapp/containers/products/products_page.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -75,6 +76,20 @@ class DrawerWidget extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(
                           context, GuardiansPage.routeName);
+                    },
+                  ),
+                  ListTile(
+                    title: const Text(
+                      'Products',
+                      style: TextStyle(
+                          color: Colors.white70,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                          context, ProductsPage.routeName);
                     },
                   ),
                 ],

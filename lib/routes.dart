@@ -5,6 +5,7 @@ import 'package:fluttertestapp/containers/common/notfound_page.dart';
 import 'package:fluttertestapp/containers/common/page_wrapper.dart';
 import 'package:fluttertestapp/containers/photos/edit_photo_details.dart';
 import 'package:fluttertestapp/containers/photos/photo_details.dart';
+import 'package:fluttertestapp/containers/products/products_page.dart';
 import 'package:fluttertestapp/models/photos_model.dart';
 import 'package:fluttertestapp/models/posts_model.dart';
 import 'package:fluttertestapp/containers/posts/edit_post_details.dart';
@@ -17,6 +18,11 @@ class Routes {
 
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case ProductsPage.routeName:
+        return MaterialPageRoute(
+            builder: (_) => PageWrapper(
+                cubit: _counterBloc,
+                child: const ProductsPage(title: 'Products')));
       case GuardiansPage.routeName:
         return MaterialPageRoute(
             builder: (_) => PageWrapper(
