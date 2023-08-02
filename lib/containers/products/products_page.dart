@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertestapp/models/product_model.dart';
 import 'package:fluttertestapp/services/product_service.dart';
@@ -93,7 +94,7 @@ class _ProductsPageState extends State<ProductsPage> {
                             builder: (context) {
                               return Dialog(
                                 child: Container(
-                                  padding: EdgeInsets.only(left: 10),
+                                  padding: const EdgeInsets.only(left: 10),
                                   child: SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * 0.9,
@@ -103,7 +104,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Expanded(
+                                        const Expanded(
                                             child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
@@ -122,7 +123,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                   .height *
                                               0.6,
                                           child: ListView.builder(
-                                            padding: EdgeInsets.all(0),
+                                            padding: const EdgeInsets.all(0),
                                             itemCount: _selectedIds.length,
                                             itemBuilder: (context, index) {
                                               var record = _products.firstWhere(
@@ -153,7 +154,8 @@ class _ProductsPageState extends State<ProductsPage> {
                                                       Navigator.pop(
                                                           context, "deleted");
                                                     },
-                                                    icon: Icon(Icons.delete)),
+                                                    icon: const Icon(
+                                                        Icons.delete)),
                                               );
                                               return Card(
                                                 child: listtile,
@@ -166,7 +168,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             "Total price: ${totalprice}",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         )),
@@ -180,7 +182,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                 0.76,
                                             child: ElevatedButton(
                                                 onPressed: () => false,
-                                                child: Text("Checkout")),
+                                                child: const Text("Checkout")),
                                           ),
                                         ))
                                       ],
@@ -192,7 +194,7 @@ class _ProductsPageState extends State<ProductsPage> {
                           );
                         }
                       },
-                      icon: Icon(Icons.shopping_bag)),
+                      icon: const Icon(Icons.shopping_bag)),
                 )),
                 _selectedIds.length > 0
                     ? Expanded(
@@ -200,20 +202,20 @@ class _ProductsPageState extends State<ProductsPage> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           _selectedIds.length.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                               color: Color.fromARGB(255, 225, 237, 223)),
                         ),
                       ))
-                    : SizedBox.shrink()
+                    : const SizedBox.shrink()
               ],
             ),
           )
         ],
       ),
       body: Container(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: Stack(
           children: [
             ListView.builder(
@@ -224,23 +226,101 @@ class _ProductsPageState extends State<ProductsPage> {
                     title: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ImageViewer(
-                      parentContext: context,
-                      height: 250,
+                    GestureDetector(
+                      child: ImageViewer(
+                        parentContext: context,
+                        height: 250,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        radius: 10,
+                        url: record.thumbnail,
+                      ),
+                      onLongPress: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.5,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    child: Card(
+                                      child: CarouselSlider(
+                                        options: CarouselOptions(height: 300.0),
+                                        items: record.images.map((i) {
+                                          var image = i
+                                              .trim()
+                                              .replaceAll('"', "")
+                                              .replaceAll("[", "")
+                                              .replaceAll("]", "");
+                                          return Builder(
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 5.0),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white),
+                                                  child: ImageViewer(
+                                                    height: 300,
+                                                    width: 300,
+                                                    parentContext: context,
+                                                    radius: 10,
+                                                    url: image,
+                                                  ));
+                                            },
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ),
+                                ));
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.8,
-                      radius: 10,
-                      url: record.thumbnail,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 100),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: IconButton(
+                                  onPressed: () => false,
+                                  icon: const Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )),
+                            ),
+                          ),
+                          Expanded(
+                              child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              record.title,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ))
+                        ],
+                      ),
                     ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Text(
-                      record.title,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
+                    // Padding(padding: EdgeInsets.only(top: 10)),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
                     record.description.length >= 30
                         ? Text("${record.description.substring(0, 30)}...")
                         : Text(record.description),
-                    Padding(padding: EdgeInsets.only(top: 10)),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -256,7 +336,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         )),
                       ],
                     ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -273,7 +353,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         )),
                       ],
                     ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -289,33 +369,34 @@ class _ProductsPageState extends State<ProductsPage> {
                         )),
                       ],
                     ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Expanded(
                             child: Align(
                           alignment: Alignment.center,
-                          child: Container(
+                          child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
                                 style: ButtonStyle(
-                                    foregroundColor: MaterialStatePropertyAll(
+                                    foregroundColor: const MaterialStatePropertyAll(
                                         Color.fromARGB(244, 246, 244, 244)),
-                                    textStyle: MaterialStatePropertyAll(TextStyle(
+                                    textStyle: const MaterialStatePropertyAll(TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20)),
-                                    elevation: MaterialStatePropertyAll(20),
+                                    elevation:
+                                        const MaterialStatePropertyAll(20),
                                     fixedSize: MaterialStatePropertyAll(Size(
                                         MediaQuery.of(context).size.width, 45)),
                                     backgroundColor: MaterialStatePropertyAll(
                                         _selectedIds.any((id) => id == record.id)
-                                            ? Color.fromARGB(255, 211, 202, 167)
-                                            : Color.fromARGB(255, 255, 204, 0)),
-                                    shape: MaterialStatePropertyAll(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20))))),
+                                            ? const Color.fromARGB(
+                                                255, 211, 202, 167)
+                                            : const Color.fromARGB(
+                                                255, 255, 204, 0)),
+                                    shape: const MaterialStatePropertyAll(
+                                        RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))))),
                                 onPressed: () {
                                   var exist =
                                       _selectedIds.any((id) => id == record.id);
@@ -330,11 +411,11 @@ class _ProductsPageState extends State<ProductsPage> {
                         ))
                       ],
                     ),
-                    Padding(padding: EdgeInsets.only(bottom: 10)),
+                    const Padding(padding: EdgeInsets.only(bottom: 10)),
                   ],
                 ));
-                return Container(
-                  height: 500,
+                return SizedBox(
+                  height: 550,
                   child: Card(
                     child: listtile,
                   ),
@@ -342,10 +423,10 @@ class _ProductsPageState extends State<ProductsPage> {
               },
             ),
             isLoading && !isError
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator(),
                   )
-                : SizedBox.shrink()
+                : const SizedBox.shrink()
           ],
         ),
       ),
