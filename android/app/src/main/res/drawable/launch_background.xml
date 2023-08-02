@@ -4,9 +4,9 @@
     <item android:drawable="@android:color/white" />
 
     <!-- You can insert your own image assets here -->
-    <!-- <item>
+    <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/twitter_x" />
-    </item> -->
+            android:src="@mipmap/test_logo" />
+    </item>
 </layer-list>

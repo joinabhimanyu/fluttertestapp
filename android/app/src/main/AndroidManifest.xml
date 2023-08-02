@@ -25,7 +25,7 @@
     <application
         android:label="fluttertestapp"
         android:name="${applicationName}"
-        android:icon="@mipmap/twitter_x">
+        android:icon="@mipmap/test_logo">
         <activity
             android:name=".MainActivity"
             android:exported="true"

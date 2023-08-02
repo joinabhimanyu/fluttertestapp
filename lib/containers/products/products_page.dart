@@ -302,15 +302,16 @@ class _ProductsPageState extends State<ProductsPage> {
                                 style: ButtonStyle(
                                     foregroundColor: MaterialStatePropertyAll(
                                         Color.fromARGB(244, 246, 244, 244)),
-                                    textStyle: MaterialStatePropertyAll(
-                                        TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20)),
+                                    textStyle: MaterialStatePropertyAll(TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20)),
                                     elevation: MaterialStatePropertyAll(20),
                                     fixedSize: MaterialStatePropertyAll(Size(
                                         MediaQuery.of(context).size.width, 45)),
                                     backgroundColor: MaterialStatePropertyAll(
-                                        Color.fromARGB(255, 255, 204, 0)),
+                                        _selectedIds.any((id) => id == record.id)
+                                            ? Color.fromARGB(255, 211, 202, 167)
+                                            : Color.fromARGB(255, 255, 204, 0)),
                                     shape: MaterialStatePropertyAll(
                                         RoundedRectangleBorder(
                                             borderRadius: BorderRadius.all(
