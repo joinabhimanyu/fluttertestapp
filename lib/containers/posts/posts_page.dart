@@ -111,6 +111,7 @@ class _PostsPageState extends State<PostsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: const DrawerWidget(),
       appBar: AppBar(
         title: Text(widget.title),

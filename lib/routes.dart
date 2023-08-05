@@ -5,6 +5,7 @@ import 'package:fluttertestapp/containers/common/notfound_page.dart';
 import 'package:fluttertestapp/containers/common/page_wrapper.dart';
 import 'package:fluttertestapp/containers/photos/edit_photo_details.dart';
 import 'package:fluttertestapp/containers/photos/photo_details.dart';
+import 'package:fluttertestapp/containers/products/product_details_page.dart';
 import 'package:fluttertestapp/containers/products/products_page.dart';
 import 'package:fluttertestapp/models/photos_model.dart';
 import 'package:fluttertestapp/models/posts_model.dart';
@@ -12,6 +13,7 @@ import 'package:fluttertestapp/containers/posts/edit_post_details.dart';
 import 'package:fluttertestapp/containers/photos/photos_page.dart';
 import 'package:fluttertestapp/containers/posts/post_details.dart';
 import 'package:fluttertestapp/containers/posts/posts_page.dart';
+import 'package:fluttertestapp/models/product_model.dart';
 
 class Routes {
   final _counterBloc = CounterCubit();
@@ -23,6 +25,15 @@ class Routes {
             builder: (_) => PageWrapper(
                 cubit: _counterBloc,
                 child: const ProductsPage(title: 'Products')));
+      case ProductDetailsPage.routeName:
+        {
+          var data = settings.arguments as ProductModel;
+          return MaterialPageRoute(
+              builder: (_) => PageWrapper(
+                  cubit: _counterBloc,
+                  child: ProductDetailsPage(
+                      title: 'Product Details', data: data)));
+        }
       case GuardiansPage.routeName:
         return MaterialPageRoute(
             builder: (_) => PageWrapper(

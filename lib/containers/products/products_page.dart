@@ -1,10 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertestapp/containers/products/product_details_page.dart';
 import 'package:fluttertestapp/models/product_model.dart';
 import 'package:fluttertestapp/services/product_service.dart';
 import 'package:fluttertestapp/widgets/drawer_widget.dart';
 import 'package:fluttertestapp/widgets/image_viewer.dart';
 import 'package:fluttertestapp/widgets/share_icons.dart';
+
+enum FillType { full, empty }
+
+class RFill {
+  const RFill({required this.fill});
+  final FillType fill;
+}
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({Key? key, required this.title}) : super(key: key);
@@ -56,6 +64,34 @@ class _ProductsPageState extends State<ProductsPage> {
     }
   }
 
+  Widget _renderRatings(double rating) {
+    var basevalue = rating.floor();
+    var list = List<RFill>.generate(5, (index) {
+      if (index <= basevalue - 1) {
+        return RFill(fill: FillType.full);
+      }
+      return RFill(fill: FillType.empty);
+    });
+    return Container(
+      width: 200,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: list
+              .map((e) => e.fill == FillType.full
+                  ? const Icon(
+                      Icons.star,
+                      color: Colors.green,
+                    )
+                  : const Icon(
+                      Icons.star,
+                      color: Colors.white,
+                    ))
+              .toList()
+          // List<Widget>.generate(list.length, (index) => Icon(Icons.star, color: Colors.green,)).toList()
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +129,9 @@ class _ProductsPageState extends State<ProductsPage> {
                             context: context,
                             builder: (context) {
                               return Dialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
                                 child: Container(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: SizedBox(
@@ -223,197 +262,218 @@ class _ProductsPageState extends State<ProductsPage> {
               itemBuilder: (context, index) {
                 var record = _products[index];
                 var listtile = ListTile(
+                    onTap: () {
+                      Navigator.pushNamed(context, ProductDetailsPage.routeName,
+                          arguments: record);
+                    },
                     title: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      child: ImageViewer(
-                        parentContext: context,
-                        height: 250,
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        radius: 10,
-                        url: record.thumbnail,
-                      ),
-                      onLongPress: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.5,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    child: Card(
-                                      child: CarouselSlider(
-                                        options: CarouselOptions(height: 300.0),
-                                        items: record.images.map((i) {
-                                          var image = i
-                                              .trim()
-                                              .replaceAll('"', "")
-                                              .replaceAll("[", "")
-                                              .replaceAll("]", "");
-                                          return Builder(
-                                            builder: (BuildContext context) {
-                                              return Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  margin: EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white),
-                                                  child: ImageViewer(
-                                                    height: 300,
-                                                    width: 300,
-                                                    parentContext: context,
-                                                    radius: 10,
-                                                    url: image,
-                                                  ));
-                                            },
-                                          );
-                                        }).toList(),
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          child: ImageViewer(
+                            parentContext: context,
+                            height: 250,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            radius: 10,
+                            url: record.thumbnail,
+                          ),
+                          onLongPress: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20))),
+                                    child: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.5,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Card(
+                                          child: CarouselSlider(
+                                            options:
+                                                CarouselOptions(height: 300.0),
+                                            items: record.images.map((i) {
+                                              var image = i
+                                                  .trim()
+                                                  .replaceAll('"', "")
+                                                  .replaceAll("[", "")
+                                                  .replaceAll("]", "");
+                                              return Builder(
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      margin: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 5.0),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              color:
+                                                                  Colors.white),
+                                                      child: ImageViewer(
+                                                        height: 300,
+                                                        width: 300,
+                                                        parentContext: context,
+                                                        radius: 10,
+                                                        url: image,
+                                                      ));
+                                                },
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ));
+                                    ));
+                              },
+                            );
                           },
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 100),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: IconButton(
-                                  onPressed: () => false,
-                                  icon: const Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                  )),
-                            ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              ConstrainedBox(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 100),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: IconButton(
+                                      onPressed: () => false,
+                                      icon: const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      )),
+                                ),
+                              ),
+                              Expanded(
+                                  child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  record.title,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ))
+                            ],
                           ),
-                          Expanded(
-                              child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              record.title,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ))
-                        ],
-                      ),
-                    ),
-                    // Padding(padding: EdgeInsets.only(top: 10)),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
-                    record.description.length >= 30
-                        ? Text("${record.description.substring(0, 30)}...")
-                        : Text(record.description),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Brand: ${record.brand}"),
-                        )),
-                        Expanded(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Category: ${record.category}"),
-                        )),
+                        ),
+                        // Padding(padding: EdgeInsets.only(top: 10)),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        record.description.length >= 30
+                            ? Text("${record.description.substring(0, 30)}...")
+                            : Text(record.description),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.center,
+                              child: Text("Brand: ${record.brand}"),
+                            )),
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.center,
+                              child: Text("Category: ${record.category}"),
+                            )),
+                          ],
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                  "Discount: ${record.discountPercentage.toString()}"),
+                            )),
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.center,
+                              child: Text("Price: ${record.price.toString()}"),
+                            )),
+                          ],
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                children: [
+                                  // Text("Rating: ${record.rati
+                                  _renderRatings(record.rating),
+                                  Padding(padding: EdgeInsets.only(top: 5)),
+                                  Text('${record.reviews.length} reviews')
+                                ],
+                              ),
+                            )),
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.center,
+                              child: Text("Stock: ${record.stock.toString()}"),
+                            )),
+                          ],
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        foregroundColor: const MaterialStatePropertyAll(
+                                            Color.fromARGB(244, 246, 244, 244)),
+                                        textStyle:
+                                            const MaterialStatePropertyAll(
+                                                TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20)),
+                                        elevation:
+                                            const MaterialStatePropertyAll(20),
+                                        fixedSize: MaterialStatePropertyAll(Size(
+                                            MediaQuery.of(context).size.width,
+                                            45)),
+                                        backgroundColor: MaterialStatePropertyAll(
+                                            _selectedIds.any((id) => id == record.id)
+                                                ? const Color.fromARGB(
+                                                    255, 211, 202, 167)
+                                                : const Color.fromARGB(
+                                                    255, 255, 204, 0)),
+                                        shape: const MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))))),
+                                    onPressed: () {
+                                      var exist = _selectedIds
+                                          .any((id) => id == record.id);
+                                      if (!exist) {
+                                        setState(() {
+                                          _selectedIds.add(record.id);
+                                        });
+                                      }
+                                    },
+                                    child: const Text('Add to Cart')),
+                              ),
+                            ))
+                          ],
+                        ),
+                        const Padding(padding: EdgeInsets.only(bottom: 10)),
                       ],
-                    ),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                              "Discount: ${record.discountPercentage.toString()}"),
-                        )),
-                        Expanded(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Price: ${record.price.toString()}"),
-                        )),
-                      ],
-                    ),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Rating: ${record.rating.toString()}"),
-                        )),
-                        Expanded(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Stock: ${record.stock.toString()}"),
-                        )),
-                      ],
-                    ),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                    foregroundColor: const MaterialStatePropertyAll(
-                                        Color.fromARGB(244, 246, 244, 244)),
-                                    textStyle: const MaterialStatePropertyAll(TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20)),
-                                    elevation:
-                                        const MaterialStatePropertyAll(20),
-                                    fixedSize: MaterialStatePropertyAll(Size(
-                                        MediaQuery.of(context).size.width, 45)),
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        _selectedIds.any((id) => id == record.id)
-                                            ? const Color.fromARGB(
-                                                255, 211, 202, 167)
-                                            : const Color.fromARGB(
-                                                255, 255, 204, 0)),
-                                    shape: const MaterialStatePropertyAll(
-                                        RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))))),
-                                onPressed: () {
-                                  var exist =
-                                      _selectedIds.any((id) => id == record.id);
-                                  if (!exist) {
-                                    setState(() {
-                                      _selectedIds.add(record.id);
-                                    });
-                                  }
-                                },
-                                child: const Text('Add to Cart')),
-                          ),
-                        ))
-                      ],
-                    ),
-                    const Padding(padding: EdgeInsets.only(bottom: 10)),
-                  ],
-                ));
+                    ));
                 return SizedBox(
                   height: 550,
                   child: Card(

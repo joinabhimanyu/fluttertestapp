@@ -1,3 +1,5 @@
+import 'package:fluttertestapp/models/product_review_model.dart';
+
 class ProductModel {
   final int id;
   final String title;
@@ -10,6 +12,7 @@ class ProductModel {
   final String category;
   final String thumbnail;
   final List<String> images;
+  final List<ProductReviewModel> reviews;
 
   const ProductModel(
       {required this.id,
@@ -22,7 +25,8 @@ class ProductModel {
       required this.brand,
       required this.category,
       required this.thumbnail,
-      required this.images});
+      required this.images,
+      required this.reviews});
 
   factory ProductModel.fromJSON(Map<String, dynamic> json) {
     return ProductModel(
@@ -36,7 +40,10 @@ class ProductModel {
         brand: json['brand'],
         category: json['category'],
         thumbnail: json['thumbnail'],
-        images: json['images'].toString().split(",").toList());
+        images: json['images'].toString().split(",").toList(),
+        reviews: (json['reviews'] as List<dynamic>)
+            .map((e) => ProductReviewModel.fromJSON(e))
+            .toList());
   }
 
   Map<String, dynamic> toJSON() => {
@@ -50,6 +57,7 @@ class ProductModel {
         'brand': brand,
         'category': category,
         'thumbnail': thumbnail,
-        'images': images.join(",").toString()
+        'images': images.join(",").toString(),
+        'reviews': reviews.map((e) => e.toJSON())
       };
 }

@@ -221,6 +221,7 @@ class _GuardiansPageState extends State<GuardiansPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: const DrawerWidget(),
       appBar: AppBar(
         title: Text(widget.title),
