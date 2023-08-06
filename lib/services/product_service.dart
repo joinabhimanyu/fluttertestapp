@@ -32,7 +32,7 @@ Future<ProductResponseWrapper> fetchProducts() async {
       var body = jsonDecode(response.body);
       var products = body['products'] as List<dynamic>;
       for (var product in products) {
-        var url = "https://dummyjson.com/quotes?limit=10";
+        var url = "https://dummyjson.com/quotes?limit=5";
         var iresponse = await http.get(Uri.parse(url));
         if (iresponse.statusCode == 200) {
           var ibody = jsonDecode(iresponse.body);

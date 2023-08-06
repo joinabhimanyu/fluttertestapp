@@ -4,6 +4,8 @@ import 'package:fluttertestapp/models/product_model.dart';
 import 'package:fluttertestapp/services/product_service.dart';
 import 'package:fluttertestapp/widgets/image_viewer.dart';
 
+enum BuyingOptions { withExchange, withoutExchange }
+
 enum FillType { full, empty }
 
 class RFill {
@@ -24,12 +26,13 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
+  BuyingOptions _option = BuyingOptions.withoutExchange;
   ProductModel? _product;
   bool isLoading = false;
   List<int> _selectedIds = [];
   List<int> _quantityOptions = [];
   int _currentReviewPageNo = 1;
-  static const int PAGE_SIZE = 10;
+  static const int PAGE_SIZE = 5;
 
   @override
   void initState() {
@@ -58,7 +61,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       }
     });
     return Future.delayed(
-      Duration(milliseconds: 2000),
+      const Duration(milliseconds: 2000),
       () {
         setState(() {
           _product = widget.data;
@@ -86,9 +89,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     var basevalue = rating.floor();
     var list = List<RFill>.generate(5, (index) {
       if (index <= basevalue - 1) {
-        return RFill(fill: FillType.full);
+        return const RFill(fill: FillType.full);
       }
-      return RFill(fill: FillType.empty);
+      return const RFill(fill: FillType.empty);
     });
     return Container(
       width: 200,
@@ -110,6 +113,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
   }
 
+  double _getScreenHeightMultiplier() {
+    if (MediaQuery.of(context).size.height > 800) {
+      return 1.65;
+    }
+    return 1.8;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,10 +130,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         children: [
           _product != null
               ? SingleChildScrollView(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 1.4,
+                    height: MediaQuery.of(context).size.height *
+                        _getScreenHeightMultiplier(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -188,88 +199,156 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                         // Padding(padding: EdgeInsets.only(top: 10)),
                         const Padding(padding: EdgeInsets.only(top: 10)),
-                        _product!.description.length >= 30
-                            ? Text(
-                                "${_product!.description.substring(0, 30)}...")
-                            : Text(_product!.description),
-                        const Padding(padding: EdgeInsets.only(top: 10)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                                child: Align(
-                              alignment: Alignment.center,
-                              child: Text("Brand: ${_product!.brand}"),
-                            )),
-                            Expanded(
-                                child: Align(
-                              alignment: Alignment.center,
-                              child: Text("Category: ${_product!.category}"),
-                            )),
-                          ],
+                        Text(
+                          _product!.description,
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
                         ),
-                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        const Padding(padding: EdgeInsets.only(top: 20)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Brand: ${_product!.brand}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            )),
                             Expanded(
                                 child: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                  "Discount: ${_product!.discountPercentage.toString()}"),
-                            )),
-                            Expanded(
-                                child: Align(
-                              alignment: Alignment.center,
-                              child:
-                                  Text("Price: ${_product!.price.toString()}"),
+                                "Category: ${_product!.category}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             )),
                           ],
                         ),
-                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        const Padding(padding: EdgeInsets.only(top: 20)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Expanded(
                                 child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Discount: ${_product!.discountPercentage.toString()}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            )),
+                            Expanded(
+                                child: Align(
                               alignment: Alignment.center,
+                              child: Text(
+                                "Price: ${_product!.price.toString()}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            )),
+                          ],
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 20)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.centerLeft,
                               child: Column(
                                 children: [
                                   // Text("Rating: ${_product.rati
                                   _renderRatings(_product!.rating),
-                                  Padding(padding: EdgeInsets.only(top: 5)),
-                                  Text('${_product!.reviews.length} reviews')
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 10)),
+                                  Text(
+                                    textAlign: TextAlign.left,
+                                    '${_product!.reviews.length} reviews',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )
                                 ],
                               ),
                             )),
                             Expanded(
                                 child: Align(
                               alignment: Alignment.center,
-                              child:
-                                  Text("Stock: ${_product!.stock.toString()}"),
+                              child: Text(
+                                "Stock: ${_product!.stock.toString()}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             )),
                           ],
                         ),
-                        const Padding(padding: EdgeInsets.only(top: 10)),
-                        _quantityOptions.length > 0
-                            ? Column(
+                        const Padding(padding: EdgeInsets.only(top: 20)),
+                        _quantityOptions.isNotEmpty
+                            ? Row(
                                 children: [
-                                  DropdownButtonFormField(
-                                    hint: Text('Choose Quantity'),
-                                    items: _quantityOptions
-                                        .map((e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e.toString())))
-                                        .toList(),
-                                    onChanged: (value) {
-                                      print('value');
-                                    },
-                                  ),
-                                  const Padding(
-                                      padding: EdgeInsets.only(top: 10)),
+                                  Expanded(
+                                      child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: SizedBox(
+                                      width: 180,
+                                      height: 60,
+                                      child: Container(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: DropdownButton(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(30)),
+                                          hint: const Text('Choose Quantity'),
+                                          items: _quantityOptions
+                                              .map((e) => DropdownMenuItem(
+                                                  value: e,
+                                                  child: Text(e.toString())))
+                                              .toList(),
+                                          onChanged: (value) {
+                                            print('value');
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  )),
                                 ],
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Card(
+                            child: Column(
+                              children: <Widget>[
+                                ListTile(
+                                  title: const Text('Buy with Exchange'),
+                                  leading: Radio<BuyingOptions>(
+                                    value: BuyingOptions.withExchange,
+                                    groupValue: _option,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _option = BuyingOptions.withExchange;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                ListTile(
+                                  title: const Text('Buy without exchange'),
+                                  leading: Radio<BuyingOptions>(
+                                    value: BuyingOptions.withoutExchange,
+                                    groupValue: _option,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _option = BuyingOptions.withoutExchange;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -337,11 +416,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                             MediaQuery.of(context).size.width,
                                             45)),
                                         backgroundColor: MaterialStatePropertyAll(
-                                            _selectedIds.any(
-                                                    (id) => id == _product!.id)
+                                            _selectedIds.any((id) => id == _product!.id)
                                                 ? const Color.fromARGB(
                                                     255, 211, 202, 167)
-                                                : Color.fromARGB(255, 255, 170, 0)),
+                                                : const Color.fromARGB(
+                                                    255, 255, 170, 0)),
                                         shape: const MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))))),
                                     onPressed: () {
                                       var exist = _selectedIds
@@ -357,11 +436,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             ))
                           ],
                         ),
-                        Padding(padding: EdgeInsets.only(top: 20)),
+                        const Padding(padding: EdgeInsets.only(top: 20)),
                         SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Row(children: [
-                              Expanded(
+                              const Expanded(
                                   child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -378,11 +457,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                       onPressed: () async {
                                         await _loadMoreReviews();
                                       },
-                                      child: Text("Load more...")),
+                                      child: const Text("Load more...")),
                                 ),
                               )
                             ])),
-                        Padding(padding: EdgeInsets.only(top: 20)),
+                        const Padding(padding: EdgeInsets.only(top: 20)),
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height * 0.5,
@@ -395,7 +474,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   width: 100,
                                   child: Row(
                                     children: [
-                                      Expanded(
+                                      const Expanded(
                                           child: Align(
                                         alignment: Alignment.centerLeft,
                                         child: CircleAvatar(),
@@ -423,12 +502,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
                   ),
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
           isLoading
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : SizedBox.shrink()
+              : const SizedBox.shrink()
         ],
       ),
     );
