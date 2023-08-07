@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertestapp/models/guardian_result.dart';
 import 'package:fluttertestapp/services/guardian_service.dart';
-import 'package:fluttertestapp/services/hotels_service.dart';
 import 'package:fluttertestapp/widgets/custom_search_field.dart';
 import 'package:fluttertestapp/widgets/drawer_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,7 +12,7 @@ class Choice {
   final ChoiceType type;
 }
 
-enum ChoiceType { Restaurants, Hotels, Books, Movies }
+enum ChoiceType { Restaurants, News, Books, Movies }
 
 class GuardiansPage extends StatefulWidget {
   const GuardiansPage({Key? key, required this.title}) : super(key: key);
@@ -50,7 +49,7 @@ class _GuardiansPageState extends State<GuardiansPage>
             type: ChoiceType.Restaurants);
       } else if (index == 1) {
         return const Choice(
-            icon: Icons.hotel, title: "Hotels", type: ChoiceType.Hotels);
+            icon: Icons.hotel, title: "News", type: ChoiceType.News);
       } else if (index == 2) {
         return const Choice(
             icon: Icons.book, title: "Books", type: ChoiceType.Books);
@@ -78,7 +77,6 @@ class _GuardiansPageState extends State<GuardiansPage>
       //_future = searchGuardianPlatform(page, 20, "");
     });
     fetchGuardingData();
-    fetchHotels();
     super.initState();
   }
 
@@ -134,11 +132,6 @@ class _GuardiansPageState extends State<GuardiansPage>
             itemBuilder: (context, index) {
               var record = _results[index];
               var listtile = ListTile(
-                //leading: Text(record.pillarName),
-                // leading: const Icon(
-                //   Icons.search,
-                //   color: Colors.blue,
-                // ),
                 title: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Column(
